@@ -45,15 +45,55 @@ export async function getUserById(id) {
   return user;
 }
 
+export async function updateUserById(
+  id,
+  account_type,
+  username,
+  first_name,
+  fitness_level,
+  fitness_goal,
+  user_achievements
+) {
+  const sql = `
+    UPDATE users
+    SET account_type = $1,
+        username = $2,
+        first_name = $3,
+        fitness_level = $4,
+        fitness_goal = $5,
+        user_achievements = $6
+    WHERE id = $7
+    RETURNING *
+  `;
+  const {
+    rows: [user],
+  } = await db.query(sql, [
+    account_type,
+    username,
+    first_name,
+    fitness_level,
+    fitness_goal,
+    user_achievements,
+    id,
+  ]);
+  return user;
+}
+
 export async function traineeFindTrainer(userId) {
   const sql = `
     SELECT *
     FROM users
     WHERE account_type = 1
       AND id != $1
-      AND fitness_goal = (SELECT fitness_goal FROM users WHERE id = $1)
-      AND id = (SELECT preferred_trainer FROM users WHERE id = $1)
+      AND fitness_goal = (
+        SELECT fitness_goal FROM users WHERE id = $1
+      )
+      AND gender = (
+        SELECT preferred_trainer FROM users WHERE id = $1
+      )
   `;
   const { rows: trainers } = await db.query(sql, [userId]);
   return trainers;
 }
+
+
