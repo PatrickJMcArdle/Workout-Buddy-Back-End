@@ -10,7 +10,8 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   account_type INTEGER NOT NULL,
-  username TEXT NOT NULL UNIQUE,
+  username text NOT NULL UNIQUE,
+  first_name TEXT NOT NULL,
   fitness_level INTEGER,
   fitness_goal INTEGER,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
