@@ -16,12 +16,27 @@ async function seed() {
 
   // Seed users
   await db.query(`
-    INSERT INTO users (account_type, username, fitness_level, fitness_goal, user_achievements, password)
-    VALUES
-      (1, 'alice', 2, 1, 1, 'password123'),
-      (1, 'bob', 1, 2, 0, 'secret456'),
-      (2, 'carol', 3, 3, 2, 'trainerpass')
-    ON CONFLICT DO NOTHING;
+    INSERT INTO users (account_type, username, fitness_level, fitness_goal, preferred_trainer, password) VALUES
+      (1, 'peckjustin', 1, 3, NULL, 'password123'),
+      (1, 'jennybriggs', 3, 1, NULL, 'password123'),
+      (1, 'christine22', 1, 3, NULL, 'password123'),
+      (1, 'ronald76', 3, 2, NULL, 'password123'),
+      (1, 'sherylwalsh', 1, 2, NULL, 'password123'),
+      (0, 'iortiz', 1, 2, 3, 'password123'),
+      (0, 'ydavis', 3, 3, 5, 'password123'),
+      (0, 'johnfox', 3, 2, 5, 'password123'),
+      (0, 'david49', 1, 2, 4, 'password123'),
+      (0, 'randalljames', 2, 1, 4, 'password123'),
+      (0, 'andrew65', 3, 2, 2, 'password123'),
+      (0, 'portermelissa', 2, 2, 1, 'password123'),
+      (0, 'jacoballen', 2, 3, 3, 'password123'),
+      (0, 'weaverryan', 1, 3, 1, 'password123'),
+      (0, 'moorebrian', 2, 3, 4, 'password123'),
+      (0, 'blackkelly', 1, 1, 4, 'password123'),
+      (0, 'robertjoseph', 2, 2, 5, 'password123'),
+      (0, 'riverachristian', 3, 3, 2, 'password123'),
+      (0, 'simpsondavid', 1, 3, 1, 'password123'),
+      (0, 'harrisnicholas', 3, 3, 5, 'password123');
   `);
 
   // Seed workouts

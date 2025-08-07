@@ -44,3 +44,16 @@ export async function getUserById(id) {
   } = await db.query(sql, [id]);
   return user;
 }
+
+export async function traineeFindTrainer(userId) {
+  const sql = `
+    SELECT *
+    FROM users
+    WHERE account_type = 1
+      AND id != $1
+      AND fitness_goal = (SELECT fitness_goal FROM users WHERE id = $1)
+      AND id = (SELECT preferred_trainer FROM users WHERE id = $1)
+  `;
+  const { rows: trainers } = await db.query(sql, [userId]);
+  return trainers;
+}

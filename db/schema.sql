@@ -13,6 +13,7 @@ CREATE TABLE users (
   username TEXT NOT NULL UNIQUE,
   fitness_level INTEGER,
   fitness_goal INTEGER,
+  preferred_trainer INTEGER,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_achievements INTEGER DEFAULT 0,
   password TEXT NOT NULL
