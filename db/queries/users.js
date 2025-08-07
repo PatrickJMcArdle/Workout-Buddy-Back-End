@@ -44,3 +44,34 @@ export async function getUserById(id) {
   } = await db.query(sql, [id]);
   return user;
 }
+
+export async function updateUserById(
+  id,
+  account_type,
+  username,
+  fitness_level,
+  fitness_goal,
+  user_achievements
+) {
+  const sql = `
+    UPDATE users
+    SET account_type = $1,
+        username = $2,
+        fitness_level = $3,
+        fitness_goal = $4,
+        user_achievements = $5
+    WHERE id = $6
+    RETURNING *
+  `;
+  const {
+    rows: [user],
+  } = await db.query(sql, [
+    account_type,
+    username,
+    fitness_level,
+    fitness_goal,
+    user_achievements,
+    id,
+  ]);
+  return user;
+}
