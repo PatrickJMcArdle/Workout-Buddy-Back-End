@@ -49,6 +49,7 @@ export async function updateUserById(
   id,
   account_type,
   username,
+  first_name,
   fitness_level,
   fitness_goal,
   user_achievements
@@ -57,10 +58,11 @@ export async function updateUserById(
     UPDATE users
     SET account_type = $1,
         username = $2,
-        fitness_level = $3,
-        fitness_goal = $4,
-        user_achievements = $5
-    WHERE id = $6
+        first_name = $3,
+        fitness_level = $4,
+        fitness_goal = $5,
+        user_achievements = $6
+    WHERE id = $7
     RETURNING *
   `;
   const {
@@ -68,6 +70,7 @@ export async function updateUserById(
   } = await db.query(sql, [
     account_type,
     username,
+    first_name,
     fitness_level,
     fitness_goal,
     user_achievements,

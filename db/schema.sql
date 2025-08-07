@@ -11,6 +11,7 @@ CREATE TABLE users (
   id serial PRIMARY KEY,
   account_type INTEGER NOT NULL,
   username text NOT NULL UNIQUE,
+  first_name TEXT NOT NULL,
   fitness_level INTEGER,
   fitness_goal INTEGER,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
