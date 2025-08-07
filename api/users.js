@@ -6,6 +6,7 @@ import {
   createUser,
   getUserByUsernameAndPassword,
   getUserById,
+  traineeFindTrainer
 } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
 import { createToken } from "#utils/jwt";
@@ -40,3 +41,10 @@ router.route("/:id").get(async (req, res) => {
   }
   res.send(user);
 });
+
+router.route("/trainers/:id").get(async (req, res) => {
+  const {id} = req.params;
+  const trainers = await traineeFindTrainer(id);
+  if (!trainers) return res.status(404).send("no trainers found");
+  res.send(trainers);
+})
