@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  account_type INTEGER NOT NULL,
+  account_type INTEGER DEFAULT 0,
   username text NOT NULL UNIQUE,
   first_name TEXT NOT NULL,
   fitness_level INTEGER,

@@ -6,20 +6,25 @@ import {
   createUser,
   getUserByUsernameAndPassword,
   getUserById,
-  traineeFindTrainer
+  traineeFindTrainer,
+  trainerFindTrainees
 } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
 import { createToken } from "#utils/jwt";
+import requireUser from "#middleware/requireUser";
 
 router
   .route("/register")
-  .post(requireBody(["username", "password"]), async (req, res) => {
-    const { username, password } = req.body;
-    const user = await createUser(username, password);
+  .post(
+    requireBody(["username", "password", "first_name"]),
+    async (req, res) => {
+      const { username, password, first_name } = req.body;
+      const user = await createUser(username, password, first_name);
 
-    const token = await createToken({ id: user.id });
-    res.status(201).send(token);
-  });
+      const token = await createToken({ id: user.id });
+      res.status(201).send(token);
+    }
+  );
 
 router
   .route("/login")
@@ -42,9 +47,16 @@ router.route("/:id").get(async (req, res) => {
   res.send(user);
 });
 
-router.route("/trainers/:id").get(async (req, res) => {
-  const {id} = req.params;
+router.route("/trainers/:id").get(requireUser, async (req, res) => {
+  const { id } = req.params;
   const trainers = await traineeFindTrainer(id);
   if (!trainers) return res.status(404).send("no trainers found");
   res.send(trainers);
+})
+
+router.route("/trainees/:id").get(requireUser, async (req, res) => {
+  const {id} = req.params;
+  const trainees = await trainerFindTrainees(id);
+  if (!trainees) return res.status(404).send("no trainees found");
+  res.send(trainees);
 })

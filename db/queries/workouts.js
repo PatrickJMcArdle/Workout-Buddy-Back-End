@@ -19,3 +19,5 @@ export async function getAllWorkouts() {
   const { rows: workouts } = await db.query(sql);
   return workouts;
 }
+
+
