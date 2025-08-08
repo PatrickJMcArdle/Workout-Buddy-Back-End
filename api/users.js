@@ -7,11 +7,13 @@ import {
   getUserByUsernameAndPassword,
   getUserById,
   traineeFindTrainer,
-  trainerFindTrainees
+  trainerFindTrainees,
+  createTrainer,
 } from "#db/queries/users";
 import requireBody from "#middleware/requireBody";
 import { createToken } from "#utils/jwt";
 import requireUser from "#middleware/requireUser";
+import requireAdmin from "#middleware/requireAdmin";
 
 router
   .route("/register")
@@ -52,11 +54,18 @@ router.route("/trainers/:id").get(requireUser, async (req, res) => {
   const trainers = await traineeFindTrainer(id);
   if (!trainers) return res.status(404).send("no trainers found");
   res.send(trainers);
-})
+});
 
 router.route("/trainees/:id").get(requireUser, async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   const trainees = await trainerFindTrainees(id);
   if (!trainees) return res.status(404).send("no trainees found");
   res.send(trainees);
-})
+});
+
+router.route("/admin/trainers/:id").put(requireAdmin, async (req, res) => {
+  const { id } = req.params;
+  const changedAccount = await createTrainer(id);
+  if (!changedAccount) return res.status(404).send("account not found");
+  res.status(200).send("account changed to trainer");
+});
