@@ -71,3 +71,12 @@ CREATE TABLE buddy (
   trainer_id INTEGER,
   FOREIGN KEY (trainer_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+CREATE TABLE settings (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  theme CHAR(1) DEFAULT 'L',
+  notifications BOOLEAN DEFAULT true,
+  public_profile BOOLEAN DEFAULT true,
+  location_sharing BOOLEAN DEFAULT true
+);
