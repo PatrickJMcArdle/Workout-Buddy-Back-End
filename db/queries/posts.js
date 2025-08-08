@@ -49,3 +49,5 @@ export async function updatePostById(id, title, body, user_id, status) {
   } = await db.query(sql, [title, body, user_id, status, id]);
   return post;
 }
+
+

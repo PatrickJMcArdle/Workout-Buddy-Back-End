@@ -1,18 +1,18 @@
 import db from "#db/client";
 import bcrypt from "bcrypt";
 
-export async function createUser(username, password) {
+export async function createUser(username, password, first_name) {
   const sql = `
   INSERT INTO users
-    (username, password)
+    (username, password, first_name)
   VALUES
-    ($1, $2)
+    ($1, $2, $3)
   RETURNING *
   `;
   const hashedPassword = await bcrypt.hash(password, 10);
   const {
     rows: [user],
-  } = await db.query(sql, [username, hashedPassword]);
+  } = await db.query(sql, [username, hashedPassword, first_name]);
   return user;
 }
 
@@ -96,4 +96,29 @@ export async function traineeFindTrainer(userId) {
   return trainers;
 }
 
+export async function trainerFindTrainees(trainerId) {
+  const sql = `
+    SELECT *
+    FROM users
+    WHERE account_type = 0             
+      AND id != $1
+      AND fitness_goal = (SELECT fitness_goal FROM users WHERE id = $1)
+      AND preferred_trainer = (SELECT gender FROM users WHERE id = $1)
+  `;
+  const { rows: trainees } = await db.query(sql, [trainerId]);
+  return trainees; 
+}
+
+export async function createTrainer(userId) {
+  const sql = `
+    UPDATE users
+    SET account_type = 1
+    WHERE id = $1
+    RETURNING id, username, first_name, account_type
+  `;
+  const {
+    rows: [user],
+  } = await db.query(sql, [userId]);
+  return user;
+}
 
