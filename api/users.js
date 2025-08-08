@@ -63,9 +63,4 @@ router.route("/trainees/:id").get(requireUser, async (req, res) => {
   res.send(trainees);
 });
 
-router.route("/admin/trainers/:id").put(requireAdmin, async (req, res) => {
-  const { id } = req.params;
-  const changedAccount = await createTrainer(id);
-  if (!changedAccount) return res.status(404).send("account not found");
-  res.status(200).send("account changed to trainer");
-});
+

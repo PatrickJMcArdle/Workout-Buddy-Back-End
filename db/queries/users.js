@@ -122,3 +122,11 @@ export async function createTrainer(userId) {
   return user;
 }
 
+export async function getUsers() {
+  const sql = `
+  SELECT * 
+  FROM users
+  `;
+  const {rows: users} = await db.query(sql);
+  return users;
+}
