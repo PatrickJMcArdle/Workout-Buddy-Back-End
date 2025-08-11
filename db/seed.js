@@ -17,40 +17,73 @@ async function seed() {
   `);
 
   const users = [
-    {
-      account_type: 1,
-      username: "peckjustin",
-      first_name: "Justin",
-      fitness_level: 1,
-      fitness_goal: 3,
-      preferred_trainer: null,
-      gender: 0,
-      birthday: "1990-05-21",
-      password: "password123",
-    },
-    {
-      account_type: 1,
-      username: "jennybriggs",
-      first_name: "Jenny",
-      fitness_level: 3,
-      fitness_goal: 1,
-      preferred_trainer: null,
-      gender: 1,
-      birthday: "1992-08-14",
-      password: "password123",
-    },
-    {
-      account_type: 1,
-      username: "christine22",
-      first_name: "Christine",
-      fitness_level: 1,
-      fitness_goal: 3,
-      preferred_trainer: null,
-      gender: 1,
-      birthday: "1988-11-02",
-      password: "password123",
-    },
-  ];
+  {
+    account_type: 1, // trainer
+    username: "peckjustin",
+    first_name: "Justin",
+    fitness_level: 1,
+    fitness_goal: 3,
+    preferred_trainer: null,
+    gender: 0,
+    birthday: "1990-05-21",
+    password: "password123",
+  },
+  {
+    account_type: 0, // trainee
+    username: "jennybriggs",
+    first_name: "Jenny",
+    fitness_level: 3,
+    fitness_goal: 1,
+    preferred_trainer: 1, // Justin as preferred trainer
+    gender: 1,
+    birthday: "1992-08-14",
+    password: "password123",
+  },
+  {
+    account_type: 1, // trainer
+    username: "christine22",
+    first_name: "Christine",
+    fitness_level: 1,
+    fitness_goal: 3,
+    preferred_trainer: null,
+    gender: 1,
+    birthday: "1988-11-02",
+    password: "password123",
+  },
+  {
+    account_type: 0, // trainee
+    username: "mikejohnson",
+    first_name: "Mike",
+    fitness_level: 2,
+    fitness_goal: 2,
+    preferred_trainer: 3, // Christine as preferred trainer
+    gender: 0,
+    birthday: "1995-04-10",
+    password: "password123",
+  },
+  {
+    account_type: 0, // trainee
+    username: "sarawilliams",
+    first_name: "Sara",
+    fitness_level: 1,
+    fitness_goal: 1,
+    preferred_trainer: 1, // Justin as preferred trainer
+    gender: 1,
+    birthday: "1998-09-17",
+    password: "password123",
+  },
+  {
+    account_type: 1, // trainer
+    username: "brianlee",
+    first_name: "Brian",
+    fitness_level: 3,
+    fitness_goal: 2,
+    preferred_trainer: null,
+    gender: 0,
+    birthday: "1987-12-01",
+    password: "password123",
+  },
+];
 
   for (const u of users) {
     const created = await createUser(u.username, u.password, u.first_name);
