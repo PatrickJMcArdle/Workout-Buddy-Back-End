@@ -1,6 +1,8 @@
 import db from "#db/client";
 import { createUser } from "#db/queries/users";
 
+console.log("Seeding DB URL:", process.env.DATABASE_URL);
+
 await db.connect();
 await seed();
 await db.end();
@@ -24,21 +26,21 @@ async function seed() {
     (1, 'christine22', 'Christine', 1, 3, NULL, 1, 'password123'),
     (1, 'ronald76', 'Ronald', 3, 2, NULL, 0, 'password123'),
     (1, 'sherylwalsh', 'Sheryl', 1, 2, NULL, 1, 'password123'),
-    (0, 'iortiz', 'Isabel', 1, 2, 0, 1, 'password123'),
-    (0, 'ydavis', 'Yvonne', 3, 3, 1, 1, 'password123'),
-    (0, 'johnfox', 'John', 3, 2, 0, 0, 'password123'),
-    (0, 'david49', 'David', 1, 2, 1, 0, 'password123'),
+    (0, 'iortiz', 'Isabel', 1, 2, 0, 1, 'password123'),       
+    (0, 'ydavis', 'Yvonne', 3, 3, 1, 1, 'password123'),       
+    (0, 'johnfox', 'John', 3, 2, 0, 0, 'password123'),       
+    (0, 'david49', 'David', 1, 2, 1, 0, 'password123'),      
     (0, 'randalljames', 'Randall', 2, 1, 0, 0, 'password123'),
-    (0, 'andrew65', 'Andrew', 3, 2, 0, 0, 'password123'),
+    (0, 'andrew65', 'Andrew', 3, 2, 0, 0, 'password123'),    
     (0, 'portermelissa', 'Melissa', 2, 2, 1, 1, 'password123'),
-    (0, 'jacoballen', 'Jacob', 2, 3, 0, 0, 'password123'),
-    (0, 'weaverryan', 'Ryan', 1, 3, 0, 0, 'password123'),
-    (0, 'moorebrian', 'Brian', 2, 3, 0, 0, 'password123'),
-    (0, 'blackkelly', 'Kelly', 1, 1, 1, 1, 'password123'),
-    (0, 'robertjoseph', 'Robert', 2, 2, 0, 0, 'password123'),
-    (0, 'riverachristian', 'Christian', 3, 3, 1, 0, 'password123'),
-    (0, 'simpsondavid', 'David', 1, 3, 0, 0, 'password123'),
-    (0, 'harrisnicholas', 'Nicholas', 3, 3, 0, 0, 'password123');
+    (0, 'jacoballen', 'Jacob', 2, 3, 0, 0, 'password123'),    
+    (0, 'weaverryan', 'Ryan', 1, 3, 0, 0, 'password123'),    
+    (0, 'moorebrian', 'Brian', 2, 3, 0, 0, 'password123'),   
+    (0, 'blackkelly', 'Kelly', 1, 1, 1, 1, 'password123'),    
+    (0, 'robertjoseph', 'Robert', 2, 2, 0, 0, 'password123'), 
+    (0, 'riverachristian', 'Christian', 3, 3, 1, 0, 'password123'), 
+    (0, 'simpsondavid', 'David', 1, 3, 0, 0, 'password123'),  
+    (0, 'harrisnicholas', 'Nicholas', 3, 3, 0, 0, 'password123'); 
   `);
 
   // Seed workouts
