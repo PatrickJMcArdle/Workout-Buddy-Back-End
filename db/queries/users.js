@@ -28,6 +28,7 @@ export async function getUserByUsernameAndPassword(username, password) {
   if (!user) return null;
 
   const isValid = await bcrypt.compare(password, user.password);
+  // const isValid = user.password === password;
   if (!isValid) return null;
 
   return user;

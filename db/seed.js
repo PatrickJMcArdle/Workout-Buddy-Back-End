@@ -16,32 +16,23 @@ async function seed() {
     ON CONFLICT DO NOTHING;
   `);
 
-  // Seed users
-  await db.query(`
-    INSERT INTO users 
-    (account_type, username, first_name, fitness_level, fitness_goal, preferred_trainer, gender, password) 
-  VALUES
-    (1, 'peckjustin', 'Justin', 1, 3, NULL, 0, 'password123'),
-    (1, 'jennybriggs', 'Jenny', 3, 1, NULL, 1, 'password123'),
-    (1, 'christine22', 'Christine', 1, 3, NULL, 1, 'password123'),
-    (1, 'ronald76', 'Ronald', 3, 2, NULL, 0, 'password123'),
-    (1, 'sherylwalsh', 'Sheryl', 1, 2, NULL, 1, 'password123'),
-    (0, 'iortiz', 'Isabel', 1, 2, 0, 1, 'password123'),       
-    (0, 'ydavis', 'Yvonne', 3, 3, 1, 1, 'password123'),       
-    (0, 'johnfox', 'John', 3, 2, 0, 0, 'password123'),       
-    (0, 'david49', 'David', 1, 2, 1, 0, 'password123'),      
-    (0, 'randalljames', 'Randall', 2, 1, 0, 0, 'password123'),
-    (0, 'andrew65', 'Andrew', 3, 2, 0, 0, 'password123'),    
-    (0, 'portermelissa', 'Melissa', 2, 2, 1, 1, 'password123'),
-    (0, 'jacoballen', 'Jacob', 2, 3, 0, 0, 'password123'),    
-    (0, 'weaverryan', 'Ryan', 1, 3, 0, 0, 'password123'),    
-    (0, 'moorebrian', 'Brian', 2, 3, 0, 0, 'password123'),   
-    (0, 'blackkelly', 'Kelly', 1, 1, 1, 1, 'password123'),    
-    (0, 'robertjoseph', 'Robert', 2, 2, 0, 0, 'password123'), 
-    (0, 'riverachristian', 'Christian', 3, 3, 1, 0, 'password123'), 
-    (0, 'simpsondavid', 'David', 1, 3, 0, 0, 'password123'),  
-    (0, 'harrisnicholas', 'Nicholas', 3, 3, 0, 0, 'password123'); 
-  `);
+  const users = [
+    { account_type: 1, username: "peckjustin", first_name: "Justin", fitness_level: 1, fitness_goal: 3, preferred_trainer: null, gender: 0, password: "password123" },
+    { account_type: 1, username: "jennybriggs", first_name: "Jenny", fitness_level: 3, fitness_goal: 1, preferred_trainer: null, gender: 1, password: "password123" },
+    { account_type: 1, username: "christine22", first_name: "Christine", fitness_level: 1, fitness_goal: 3, preferred_trainer: null, gender: 1, password: "password123" },
+  ];
+
+  for (const u of users) {
+    const user = await createUser(u.username, u.password, u.first_name);
+    await db.query(
+      `
+      UPDATE users
+      SET account_type = $1, fitness_level = $2, fitness_goal = $3, preferred_trainer = $4, gender = $5
+      WHERE id = $6
+      `,
+      [u.account_type, u.fitness_level, u.fitness_goal, u.preferred_trainer, u.gender, user.id]
+    );
+  }
 
   // Seed workouts
   await db.query(`
