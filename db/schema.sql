@@ -19,6 +19,7 @@ CREATE TABLE users (
   gender INTEGER,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   user_achievements INTEGER DEFAULT 0,
+  birthday DATE,
   password TEXT NOT NULL
 );
 
