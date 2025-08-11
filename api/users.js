@@ -40,7 +40,7 @@ router
   });
 
 router.route("/:id").get(requireUser, async (req, res) => {
-  const { id } = req.user.id;
+  const { id } = req.params;
   const user = await getUserById(id);
 
   if (!user) {
