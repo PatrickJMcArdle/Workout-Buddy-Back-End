@@ -2,10 +2,13 @@ import express from "express";
 const router = express.Router();
 export default router;
 
-import getUserFromToken from "#middleware/getUserFromToken";
+import requireUser from "#middleware/requireUser";
+import { getUserById } from "#db/queries/users";
 
-router.route("/").get(async (req, res, next) => {
-    const user = getUserFromToken(req, res, next);
-    if (!user) return res.status(404).send("no user found");
-    res.send(user);
+router.use(requireUser)
+
+router.route("/user").get(requireUser, async (req, res) => {
+    const id = req.user.id
+    const user = await getUserById(id)
+    res.send(user)
 })
