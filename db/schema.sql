@@ -37,8 +37,20 @@ CREATE TABLE goals (
 CREATE TABLE achievements (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
-  description TEXT,
-  value INTEGER
+  description TEXT NOT NULL,
+  category TEXT NOT NULL,
+  requirement_value INTEGER NOT NULL,
+  points_awarded INTEGER NOT NULL
+);
+
+CREATE TABLE user_achievements (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  achievement_id INTEGER NOT NULL,
+  progress INTEGER DEFAULT 0,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (achievement_id) REFERENCES achievements(id) ON DELETE CASCADE,
+  UNIQUE (user_id, achievement_id)
 );
 
 CREATE TABLE gyms (
