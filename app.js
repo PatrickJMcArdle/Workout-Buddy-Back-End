@@ -7,6 +7,7 @@ import adminRouter from "#api/admin";
 import getUserFromToken from "#middleware/getUserFromToken";
 import handlePostgresErrors from "#middleware/handlePostgresErrors";
 import homeRouter from "#api/home";
+import mapRouter from "#api/map";
 import cors from "cors";
 import morgan from "morgan";
 
@@ -24,6 +25,7 @@ app.get("/", (req, res) => res.send("Hello, World!"));
 app.use("/users", usersRouter);
 app.use("/home", homeRouter);
 app.use("/admin", adminRouter);
+app.use("/map", mapRouter);
 
 app.use(handlePostgresErrors);
 app.use((err, req, res, next) => {
