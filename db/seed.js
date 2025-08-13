@@ -128,7 +128,16 @@ async function seed() {
     INSERT INTO goals (description) VALUES
       ('Run a marathon'),
       ('Lose 10 pounds'),
-      ('Build muscle')
+      ('Run a 5K'),
+      ('Run a 10K'),
+      ('Mantain a 30-day workout streak'),
+      ('Complete 50 workouts in 3 months'),
+      ('Walk 10,000 steps daily'),
+      ('Find a workout buddy'),
+      ('Swim 1 mile'),
+      ('Complete a powerlifting meet'),
+      ('Gain 5 pounds of muscle'),
+      ('Try 5 new fitness classes')
     ON CONFLICT DO NOTHING;
   `);
 
