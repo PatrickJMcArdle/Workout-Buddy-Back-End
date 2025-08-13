@@ -34,6 +34,19 @@ CREATE TABLE goals (
   description TEXT NOT NULL
 );
 
+
+CREATE TABLE user_goals (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  goal_id INTEGER NOT NULL,
+  target_value INTEGER NOT NULL,
+  progress INTEGER DEFAULT 0,
+  is_completed BOOLEAN DEFAULT false,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (goal_id) REFERENCES goals(id) ON DELETE CASCADE,
+  UNIQUE (user_id, goal_id)
+);
+
 CREATE TABLE achievements (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
