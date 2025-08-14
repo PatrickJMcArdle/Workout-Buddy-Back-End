@@ -24,6 +24,25 @@ export async function getSettingsById(user_id) {
   return settings;
 }
 
+export async function updateAllSettings(user_id, settings) {
+  const sql = `
+    UPDATE settings
+    SET theme = $1, notifications = $2, public_profile = $3, location_sharing = $4
+    WHERE user_id = $5
+    RETURNING *
+  `;
+  const {
+    rows: [updatedSettings],
+  } = await db.query(sql, [
+    settings.theme,
+    settings.notifications,
+    settings.public_profile,
+    settings.location_sharing,
+    user_id,
+  ]);
+  return updatedSettings;
+}
+
 export async function updateTheme(user_id, theme) {
   const sql = `
     UPDATE settings
