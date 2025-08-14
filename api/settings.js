@@ -5,6 +5,7 @@ export default router;
 import {
   createSettings,
   getSettingsById,
+  updateAllSettings,
   updateTheme,
   updateNotifications,
   updatePublicProfile,
@@ -28,6 +29,39 @@ router.route("/:user_id").get(async (req, res) => {
 
   res.send(settings);
 });
+
+router
+  .route("/:user_id")
+  .put(
+    requireBody([
+      "theme",
+      "notifications",
+      "public_profile",
+      "location_sharing",
+    ]),
+    async (req, res) => {
+      const { user_id } = req.params;
+      const { theme, notifications, public_profile, location_sharing } =
+        req.body;
+
+      if (!["L", "D"].includes(theme)) {
+        return res.status(400).send("Theme must be 'L' or 'D'");
+      }
+
+      const settings = await updateAllSettings(user_id, {
+        theme,
+        notifications,
+        public_profile,
+        location_sharing,
+      });
+
+      if (!settings) {
+        return res.status(404).send("Settings not found");
+      }
+
+      res.send(settings);
+    }
+  );
 
 router
   .route("/:user_id/theme")
