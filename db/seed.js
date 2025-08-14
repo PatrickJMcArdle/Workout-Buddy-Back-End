@@ -202,3 +202,14 @@ async function seed() {
   ON CONFLICT DO NOTHING;
 `);
 }
+
+const allUsers = await db.query("SELECT id FROM users");
+for (const user of allUsers.rows) {
+  await db.query(
+    `
+      INSERT INTO settings (user_id) VALUES ($1)
+      ON CONFLICT DO NOTHING;
+    `,
+    [user.id]
+  );
+}
