@@ -201,15 +201,26 @@ async function seed() {
     ('Streak Legend', 'Maintain a 60-day workout streak', 'streaks', 60, 50)
   ON CONFLICT DO NOTHING;
 `);
+
+  await db.query(`
+  INSERT INTO settings (user_id, theme, notifications, public_profile, location_sharing)
+  VALUES
+    (1, 'L', true, true, true),
+    (2, 'L', true, true, true),
+    (3, 'L', true, true, true),
+    (4, 'L', true, true, true),
+    (5, 'L', true, true, true),
+    (6, 'L', true, true, true)
+`);
 }
 
-const allUsers = await db.query("SELECT id FROM users");
-for (const user of allUsers.rows) {
-  await db.query(
-    `
-      INSERT INTO settings (user_id) VALUES ($1)
-      ON CONFLICT DO NOTHING;
-    `,
-    [user.id]
-  );
-}
+// const allUsers = await db.query("SELECT id FROM users");
+// for (const user of allUsers.rows) {
+//   await db.query(
+//     `
+//       INSERT INTO settings (user_id) VALUES ($1)
+//       ON CONFLICT DO NOTHING;
+//     `,
+//     [user.id]
+//   );
+// }
