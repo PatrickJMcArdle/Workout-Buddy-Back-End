@@ -94,3 +94,4 @@ export async function updateLocationSharing(user_id, location_sharing) {
   } = await db.query(sql, [location_sharing, user_id]);
   return settings;
 }
+
