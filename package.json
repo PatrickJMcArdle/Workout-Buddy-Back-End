@@ -13,6 +13,7 @@
     "db:reset": "npm run db:schema && npm run db:seed"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.7",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
