@@ -2,8 +2,8 @@ import db from "#db/client";
 
 export async function createSettings(user_id) {
   const sql = `
-    INSERT INTO settings (user_id)
-    VALUES ($1)
+    INSERT INTO settings (user_id, theme, notifications, public_profile, location_sharing)
+    VALUES ($1, 'L', true, true, true)
     RETURNING *
   `;
   const {
@@ -94,4 +94,3 @@ export async function updateLocationSharing(user_id, location_sharing) {
   } = await db.query(sql, [location_sharing, user_id]);
   return settings;
 }
-
