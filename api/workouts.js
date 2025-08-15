@@ -4,10 +4,12 @@ import { getAllWorkouts, getWorkoutById } from "#db/queries/workouts";
 
 const router = express.Router();
 
+
 router.get("/", async (req, res, next) => {
   try {
     const workouts = await getAllWorkouts();
     if (!workouts.length) return res.status(404).send("no workouts found");
+
     res.send(workouts);
   } catch (err) {
     next(err);

@@ -8,6 +8,7 @@ import getUserFromToken from "#middleware/getUserFromToken";
 import handlePostgresErrors from "#middleware/handlePostgresErrors";
 import homeRouter from "#api/home";
 import mapRouter from "#api/map";
+import settingsRouter from "#api/settings";
 import cors from "cors";
 import morgan from "morgan";
 import workoutsRouter from "#api/workouts";
@@ -28,6 +29,7 @@ app.use("/home", homeRouter);
 app.use("/admin", adminRouter);
 app.use("/map", mapRouter);
 app.use("/workouts", workoutsRouter);
+app.use("/settings", settingsRouter);
 
 app.use(handlePostgresErrors);
 app.use((err, req, res, next) => {
