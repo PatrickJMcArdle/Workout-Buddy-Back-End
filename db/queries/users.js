@@ -18,14 +18,14 @@ export async function createUser(username, password, first_name) {
       INSERT INTO settings (user_id)
       VALUES ($1)
     `;
-  await client.query(settingsSql, [user.id]);
+  await db.query(settingsSql, [user.id]);
 
   const achievementsSql = `
       INSERT INTO user_achievements (user_id, achievement_id, progress)
       SELECT $1, id, 0
       FROM achievements
     `;
-  await client.query(achievementsSql, [user.id]);
+  await db.query(achievementsSql, [user.id]);
 
   const defaultGoalsSql = `
       INSERT INTO user_goals (user_id, goal_id, target_value)
@@ -39,7 +39,7 @@ export async function createUser(username, password, first_name) {
       FROM goals
       WHERE id IN (1, 2, 3)
     `; //This sets the first 3 goals to new users (easiest) and can later be changed as progress is made
-  await client.query(defaultGoalsSql, [user.id]);
+  await db.query(defaultGoalsSql, [user.id]);
 
   return user;
 }
@@ -56,7 +56,6 @@ export async function getUserByUsernameAndPassword(username, password) {
   if (!user) return null;
 
   const isValid = await bcrypt.compare(password, user.password);
-  // const isValid = user.password === password;
   if (!isValid) return null;
 
   return user;
