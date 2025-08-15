@@ -41,8 +41,7 @@ export async function getUserGoals(userId) {
       goals.description,
       user_goals.progress,
       user_goals.target_value,
-      user_goals.is_completed,
-      user_goals.created_at
+      user_goals.is_completed
     FROM goals
     JOIN user_goals ON goals.id = user_goals.goal_id
     WHERE user_goals.user_id = $1

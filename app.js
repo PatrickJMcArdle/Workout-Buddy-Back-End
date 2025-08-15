@@ -12,6 +12,7 @@ import settingsRouter from "#api/settings";
 import cors from "cors";
 import morgan from "morgan";
 import workoutsRouter from "#api/workouts";
+import goalsRouter from "#api/goals";
 
 app.use(cors({ origin: process.env.CORS_ORIGIN ?? /localhost/ }));
 
@@ -30,6 +31,7 @@ app.use("/admin", adminRouter);
 app.use("/map", mapRouter);
 app.use("/workouts", workoutsRouter);
 app.use("/settings", settingsRouter);
+app.use("/goals", goalsRouter);
 
 app.use(handlePostgresErrors);
 app.use((err, req, res, next) => {
