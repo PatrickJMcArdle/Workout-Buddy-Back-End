@@ -108,34 +108,31 @@ export async function updateUserById(
   return user;
 }
 
-export async function traineeFindTrainer(userId) {
+export async function traineeFindTrainer(userId, goal, gender) {
   const sql = `
     SELECT *
     FROM users
     WHERE account_type = 1
       AND id != $1
-      AND fitness_goal = (
-        SELECT fitness_goal FROM users WHERE id = $1
-      )
-      AND gender = (
-        SELECT preferred_trainer FROM users WHERE id = $1
-      )
+      AND ($2::int IS NULL OR fitness_goal = $2::int)
+      AND ($3::int IS NULL OR gender = $3::int)
   `;
-  const { rows: trainers } = await db.query(sql, [userId]);
+  const { rows: trainers } = await db.query(sql, [userId, goal, gender]);
   return trainers;
 }
 
-export async function trainerFindTrainees(trainerId) {
+export async function trainerFindTrainees(trainerId, goal, preferred) {
   const sql = `
     SELECT *
     FROM users
     WHERE account_type = 0             
       AND id != $1
-      AND fitness_goal = (SELECT fitness_goal FROM users WHERE id = $1)
-      AND preferred_trainer = (SELECT gender FROM users WHERE id = $1)
+      AND ($2::int IS NULL OR fitness_goal = $2::int)
+      AND ($3::int IS NULL OR preferred_trainer = $3::int)
   `;
-  const { rows: trainees } = await db.query(sql, [trainerId]);
-  return trainees;
+
+  const { rows: trainees } = await db.query(sql, [trainerId, goal, preferred]);
+  return trainees; 
 }
 
 export async function createTrainer(userId) {

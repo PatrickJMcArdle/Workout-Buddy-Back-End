@@ -51,14 +51,28 @@ router.route("/:id").get(requireUser, async (req, res) => {
 
 router.route("/trainers/:id").get(requireUser, async (req, res) => {
   const { id } = req.params;
-  const trainers = await traineeFindTrainer(id);
+  let { goal, preferred_trainer } = req.query;
+  if (goal === "") {
+    goal = null;
+  }
+  if (preferred_trainer === "") {
+    preferred_trainer = null;
+  }
+  const trainers = await traineeFindTrainer(id, goal, preferred_trainer);
   if (!trainers) return res.status(404).send("no trainers found");
   res.send(trainers);
 });
 
 router.route("/trainees/:id").get(requireUser, async (req, res) => {
   const { id } = req.params;
-  const trainees = await trainerFindTrainees(id);
+  let { goal, preferred_trainer } = req.query;
+  if (goal === "") {
+    goal = null;
+  }
+  if (preferred_trainer === "") {
+    preferred_trainer = null;
+  }
+  const trainees = await trainerFindTrainees(id, goal, preferred_trainer);
   if (!trainees) return res.status(404).send("no trainees found");
   res.send(trainees);
 });
