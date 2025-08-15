@@ -125,21 +125,21 @@ async function seed() {
 
   // Seed goals
   await db.query(`
-    INSERT INTO goals (description) VALUES
-      ('Run a marathon'),
-      ('Lose 10 pounds'),
-      ('Run a 5K'),
-      ('Run a 10K'),
-      ('Mantain a 30-day workout streak'),
-      ('Complete 50 workouts in 3 months'),
-      ('Walk 10,000 steps daily'),
-      ('Find a workout buddy'),
-      ('Swim 1 mile'),
-      ('Complete a powerlifting meet'),
-      ('Gain 5 pounds of muscle'),
-      ('Try 5 new fitness classes')
-    ON CONFLICT DO NOTHING;
-  `);
+  INSERT INTO goals (description) VALUES
+    ('Find a workout buddy'),
+    ('Walk 10,000 steps daily'),
+    ('Try 5 new fitness classes'),
+    ('Run a 5K'),
+    ('Lose 10 pounds'),
+    ('Gain 5 pounds of muscle'),
+    ('Run a 10K'),
+    ('Swim 1 mile'),
+    ('Mantain a 30-day workout streak'),
+    ('Complete 50 workouts in 3 months'),
+    ('Complete a powerlifting meet'),
+    ('Run a marathon')
+  ON CONFLICT DO NOTHING;
+`);
 
   // Seed achievements
   // await db.query(`

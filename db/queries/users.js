@@ -13,6 +13,34 @@ export async function createUser(username, password, first_name) {
   const {
     rows: [user],
   } = await db.query(sql, [username, hashedPassword, first_name]);
+
+  const settingsSql = `
+      INSERT INTO settings (user_id)
+      VALUES ($1)
+    `;
+  await client.query(settingsSql, [user.id]);
+
+  const achievementsSql = `
+      INSERT INTO user_achievements (user_id, achievement_id, progress)
+      SELECT $1, id, 0
+      FROM achievements
+    `;
+  await client.query(achievementsSql, [user.id]);
+
+  const defaultGoalsSql = `
+      INSERT INTO user_goals (user_id, goal_id, target_value)
+      SELECT $1, id, 
+        CASE 
+          WHEN id = 1 THEN 1
+          WHEN id = 2 THEN 7
+          WHEN id = 3 THEN 5
+          ELSE 1
+        END
+      FROM goals
+      WHERE id IN (1, 2, 3)
+    `; //This sets the first 3 goals to new users (easiest) and can later be changed as progress is made
+  await client.query(defaultGoalsSql, [user.id]);
+
   return user;
 }
 
@@ -102,6 +130,7 @@ export async function trainerFindTrainees(trainerId, goal, preferred) {
       AND ($2::int IS NULL OR fitness_goal = $2::int)
       AND ($3::int IS NULL OR preferred_trainer = $3::int)
   `;
+
   const { rows: trainees } = await db.query(sql, [trainerId, goal, preferred]);
   return trainees; 
 }
@@ -124,6 +153,6 @@ export async function getUsers() {
   SELECT * 
   FROM users
   `;
-  const {rows: users} = await db.query(sql);
+  const { rows: users } = await db.query(sql);
   return users;
 }
