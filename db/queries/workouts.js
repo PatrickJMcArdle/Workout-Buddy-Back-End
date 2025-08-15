@@ -1,23 +1,23 @@
 import db from "#db/client";
 
 export async function getWorkoutById(id) {
-  const sql = `
-  SELECT *
-  FROM workouts
-  WHERE id = $1
-  `;
-  const {
-    rows: [workout],
-  } = await db.query(sql, [id]);
-  return workout;
+  const { rows } = await db.query(
+    `
+      SELECT id, workout_type, description
+      FROM workouts
+      WHERE id = $1
+    `,
+    [id]
+  );
+  return rows[0] || null;
 }
 
+/** Return all workouts (ordered for stable UI). */
 export async function getAllWorkouts() {
-  const sql = `
-    SELECT * FROM workouts
-    `;
-  const { rows: workouts } = await db.query(sql);
-  return workouts;
+  const { rows } = await db.query(`
+    SELECT id, workout_type, description
+    FROM workouts
+    ORDER BY id ASC
+  `);
+  return rows;
 }
-
-
