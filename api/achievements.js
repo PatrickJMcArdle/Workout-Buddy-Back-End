@@ -2,6 +2,8 @@ import express from "express";
 const router = express.Router();
 export default router;
 
+import db from "#db/client";
+
 import {
   getAllAchievements,
   getAchievementById,
