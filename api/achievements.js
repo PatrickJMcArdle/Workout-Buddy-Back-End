@@ -1,9 +1,5 @@
 import express from "express";
-const router = express.Router();
-export default router;
-
 import db from "#db/client";
-
 import {
   getAllAchievements,
   getAchievementById,
@@ -17,7 +13,9 @@ import {
 import requireBody from "#middleware/requireBody";
 import requireUser from "#middleware/requireUser";
 
-router.route("/").get(async (req, res) => {
+const router = express.Router();
+
+router.route("/").get(async (_req, res) => {
   const achievements = await getAllAchievements();
   res.send(achievements);
 });
@@ -25,9 +23,7 @@ router.route("/").get(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
   const { id } = req.params;
   const achievement = await getAchievementById(id);
-  if (!achievement) {
-    return res.status(404).send("Achievement not found");
-  }
+  if (!achievement) return res.status(404).send("Achievement not found");
   res.send(achievement);
 });
 
@@ -53,9 +49,7 @@ router
         requirement_value,
         points_awarded
       );
-      if (!achievement) {
-        return res.status(404).send("Achievement not found");
-      }
+      if (!achievement) return res.status(404).send("Achievement not found");
       res.send(achievement);
     }
   );
@@ -92,12 +86,12 @@ router
     async (req, res) => {
       const { user_id } = req.params;
       const { category, current_value } = req.body;
-      const unlockedAchievements = await checkUnlockedAchievements(
+      const unlocked = await checkUnlockedAchievements(
         user_id,
         category,
         current_value
       );
-      res.send(unlockedAchievements);
+      res.send(unlocked);
     }
   );
 
@@ -113,6 +107,7 @@ router.post(
 
     const totalWorkouts = await getTotalWorkouts(user_id);
     const currentStreak = await getCurrentWorkoutStreak(user_id);
+
     const workoutAchievements = await checkUnlockedAchievements(
       user_id,
       "workouts",
@@ -126,19 +121,12 @@ router.post(
 
     const newAchievements = [...workoutAchievements, ...streakAchievements];
 
-    // Save new achievments to the database
-    for (const achievement of newAchievements) {
-      await updateAchievementProgress(
-        user_id,
-        achievement.id,
-        achievement.requirement_value
-      );
+    for (const a of newAchievements) {
+      await updateAchievementProgress(user_id, a.id, a.requirement_value);
     }
 
-    res.send({
-      totalWorkouts,
-      currentStreak,
-      newAchievements,
-    });
+    res.send({ totalWorkouts, currentStreak, newAchievements });
   }
 );
+
+export default router;
