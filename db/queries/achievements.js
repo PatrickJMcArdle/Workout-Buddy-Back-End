@@ -21,7 +21,14 @@ export async function getAchievementById(id) {
   return achievement;
 }
 
-export async function updateAchievementById(id, name, description, value) {
+export async function updateAchievementById(
+  id,
+  name,
+  description,
+  category,
+  requirement_value,
+  points_awarded
+) {
   const sql = `
     UPDATE achievements
     SET name = $1,
