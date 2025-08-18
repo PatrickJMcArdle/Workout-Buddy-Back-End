@@ -30,6 +30,13 @@ CREATE TABLE workouts (
   description TEXT
 );
 
+CREATE TABLE workout_sessions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE goals (
   id SERIAL PRIMARY KEY,
   description TEXT NOT NULL
