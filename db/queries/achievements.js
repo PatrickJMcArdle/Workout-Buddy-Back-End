@@ -86,8 +86,11 @@ export async function checkUnlockedAchievements(
   const sql = `
     SELECT achievements.*
     FROM achievements
+    LEFT JOIN user_achievements ON achievements.id = user_achievements.achievement_id 
+      AND user_achievements.user_id = $3
     WHERE achievements.category = $1 
-    AND achievements.requirement_value <= $2
+      AND achievements.requirement_value <= $2
+      AND user_achievements.achievement_id IS NULL
     ORDER BY achievements.requirement_value
   `;
   const { rows: achievements } = await db.query(sql, [
@@ -96,4 +99,37 @@ export async function checkUnlockedAchievements(
     userId,
   ]);
   return achievements;
+}
+
+export async function getTotalWorkouts(userId) {
+  const sql = `SELECT COUNT(*) as total FROM workout_sessions WHERE user_id = $1`;
+  const {
+    rows: [result],
+  } = await db.query(sql, [userId]);
+  return parseInt(result.total);
+}
+
+export async function getCurrentWorkoutStreak(userId) {
+  const sql = `
+    WITH daily_workouts AS (
+      SELECT DISTINCT DATE(completed_at) as workout_date
+      FROM workout_sessions 
+      WHERE user_id = $1
+      ORDER BY workout_date DESC
+    ),
+    numbered_days AS (
+      SELECT 
+        workout_date,
+        ROW_NUMBER() OVER (ORDER BY workout_date DESC) as day_number
+      FROM daily_workouts
+    )
+    SELECT COUNT(*) as current_streak
+    FROM numbered_days
+    WHERE workout_date = CURRENT_DATE - INTERVAL '1 day' * (day_number - 1)
+  `;
+
+  const {
+    rows: [result],
+  } = await db.query(sql, [userId]);
+  return parseInt(result.current_streak || 0);
 }

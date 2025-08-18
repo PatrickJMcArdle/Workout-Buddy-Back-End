@@ -9,6 +9,8 @@ import {
   getUserAchievements,
   updateAchievementProgress,
   checkUnlockedAchievements,
+  getTotalWorkouts,
+  getCurrentWorkoutStreak,
 } from "#db/queries/achievements";
 import requireBody from "#middleware/requireBody";
 import requireUser from "#middleware/requireUser";
@@ -96,3 +98,45 @@ router
       res.send(unlockedAchievements);
     }
   );
+
+router.post(
+  "/user/:user_id/complete-workout",
+  requireUser,
+  async (req, res) => {
+    const { user_id } = req.params;
+
+    await db.query("INSERT INTO workout_sessions (user_id) VALUES ($1)", [
+      user_id,
+    ]);
+
+    const totalWorkouts = await getTotalWorkouts(user_id);
+    const currentStreak = await getCurrentWorkoutStreak(user_id);
+    const workoutAchievements = await checkUnlockedAchievements(
+      user_id,
+      "workouts",
+      totalWorkouts
+    );
+    const streakAchievements = await checkUnlockedAchievements(
+      user_id,
+      "streaks",
+      currentStreak
+    );
+
+    const newAchievements = [...workoutAchievements, ...streakAchievements];
+
+    // Save new achievments to the database
+    for (const achievement of newAchievements) {
+      await updateAchievementProgress(
+        user_id,
+        achievement.id,
+        achievement.requirement_value
+      );
+    }
+
+    res.send({
+      totalWorkouts,
+      currentStreak,
+      newAchievements,
+    });
+  }
+);
