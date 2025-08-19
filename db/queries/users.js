@@ -155,3 +155,32 @@ export async function getUsers() {
   const { rows: users } = await db.query(sql);
   return users;
 }
+
+export async function changeProfile(id, username, name, gender, birthday) {
+  const sql = `
+    UPDATE users
+    SET username = $1,
+        first_name = $2,
+        gender = $3,
+        birthday = $4
+    WHERE id = $5
+    RETURNING id, username, first_name, gender, birthday;
+  `;
+
+  const values = [username, name, gender, birthday, id];
+  const {rows : [user]} = await db.query(sql, values);
+  return user;
+}
+
+export async function changeFitnessGoal(id, fitness_goal) {
+  const sql = `
+    UPDATE users
+    SET fitness_goal = $1
+    WHERE id = $2
+    RETURNING id, fitness_goal;
+  `;
+
+  const values = [fitness_goal, id];
+  const {rows : [goal]} = db.await(sql, values);
+  return goal;
+}

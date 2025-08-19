@@ -15,6 +15,7 @@ import workoutsRouter from "#api/workouts";
 import goalsRouter from "#api/goals";
 import achievementsRouter from "#api/achievements";
 
+
 app.use(cors({ origin: process.env.CORS_ORIGIN ?? /localhost/ }));
 
 app.use(morgan("dev"));
