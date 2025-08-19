@@ -14,6 +14,7 @@ import morgan from "morgan";
 import workoutsRouter from "#api/workouts";
 import goalsRouter from "#api/goals";
 
+
 app.use(cors({ origin: process.env.CORS_ORIGIN ?? /localhost/ }));
 
 app.use(morgan("dev"));
