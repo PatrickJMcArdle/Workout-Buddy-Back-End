@@ -213,4 +213,18 @@ async function seed() {
     (6, 'L', true, true, true)
     ON CONFLICT DO NOTHING;
 `);
+
+  // This was added for testing purposes and can be deleted when turning in final product
+  await db.query(`
+  INSERT INTO user_achievements (user_id, achievement_id, progress)
+  VALUES
+    (1, 1, 1),   -- User 1 completed "First Workout" 
+    (1, 7, 1),   -- User 1 completed "Getting Into Rhythm"
+    (2, 1, 1),   -- User 2 completed "First Workout"
+    (2, 8, 3),   -- User 2 has progress on "Getting Used To It" (3/5)
+    (3, 1, 1),   -- User 3 completed "First Workout"
+    (4, 1, 1),   -- User 4 completed "First Workout"
+    (4, 12, 2)   -- User 4 has 2-day streak
+  ON CONFLICT (user_id, achievement_id) DO NOTHING;
+`);
 }
