@@ -47,6 +47,19 @@ router.route("/:id").get(requireUser, async (req, res) => {
     return res.status(404).send("User couldn't be found");
   }
   res.send(user);
+})
+  .put(requireUser, async (req, res) => {
+    const { id } = req.params;
+    const { username, name, gender, birthday } = req.body;
+
+    const updatedUser = await changeProfile(
+      id,
+      username,
+      name,
+      gender,
+      birthday
+    );
+    res.send(updatedUser);
 });
 
 router.route("/trainers/:id").get(requireUser, async (req, res) => {
@@ -77,20 +90,7 @@ router
     const trainees = await trainerFindTrainees(id, goal, preferred_trainer);
     if (!trainees) return res.status(404).send("no trainees found");
     res.send(trainees);
-  })
-  .put(requireUser, async (req, res) => {
-    const { id } = req.params;
-    const { username, name, gender, birthday } = req.body;
-
-    const updatedUser = await changeProfile(
-      id,
-      username,
-      name,
-      gender,
-      birthday
-    );
-    res.send(updatedUser);
-  });
+});
 
 router.route("/:id/fitness-goal").put(requireUser, async (req, res) => {
   const { id } = req.params;
