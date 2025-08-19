@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS settings;
+DROP TABLE IF EXISTS user_goals;
+DROP TABLE IF EXISTS workout_sessions;
 DROP TABLE IF EXISTS follows;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS buddy;
@@ -109,7 +111,7 @@ CREATE TABLE buddy (
 
 CREATE TABLE settings (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE UNIQUE,
   theme CHAR(1) DEFAULT 'L',
   notifications BOOLEAN DEFAULT true,
   public_profile BOOLEAN DEFAULT true,

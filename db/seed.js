@@ -211,5 +211,6 @@ async function seed() {
     (4, 'L', true, true, true),
     (5, 'L', true, true, true),
     (6, 'L', true, true, true)
+    ON CONFLICT DO NOTHING;
 `);
 }
