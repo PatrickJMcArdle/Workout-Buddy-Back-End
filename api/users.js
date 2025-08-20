@@ -66,30 +66,32 @@ router
 
 router.route("/trainers/:id").get(requireUser, async (req, res) => {
   const { id } = req.params;
-  let { goal, preferred_trainer } = req.query;
+  let { goal, gender } = req.query;
   if (goal === "") {
     goal = null;
   }
-  if (preferred_trainer === "") {
-    preferred_trainer = null;
+  if (gender === "") {
+    gender = null;
   }
-  const trainers = await traineeFindTrainer(id, goal, preferred_trainer);
+  const trainers = await traineeFindTrainer(id, goal, gender);
   if (!trainers) return res.status(404).send("no trainers found");
   res.send(trainers);
 });
 
-router.route("/trainees/:id").get(requireUser, async (req, res) => {
-  const { id } = req.params;
-  let { goal, preferred_trainer } = req.query;
-  if (goal === "") {
-    goal = null;
-  }
-  if (preferred_trainer === "") {
-    preferred_trainer = null;
-  }
-  const trainees = await trainerFindTrainees(id, goal, preferred_trainer);
-  if (!trainees) return res.status(404).send("no trainees found");
-  res.send(trainees);
+router
+  .route("/trainees/:id")
+  .get(requireUser, async (req, res) => {
+    const { id } = req.params;
+    let { goal, gender } = req.query;
+    if (goal === "") {
+      goal = null;
+    }
+    if (gender === "") {
+      gender = null;
+    }
+    const trainees = await trainerFindTrainees(id, goal, gender);
+    if (!trainees) return res.status(404).send("no trainees found");
+    res.send(trainees);
 });
 
 router.route("/:id/fitness-goal").put(requireUser, async (req, res) => {
