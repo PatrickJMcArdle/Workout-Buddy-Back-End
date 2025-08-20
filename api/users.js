@@ -39,15 +39,17 @@ router
     res.send(token);
   });
 
-router.route("/:id").get(requireUser, async (req, res) => {
-  const { id } = req.params;
-  const user = await getUserById(id);
+router
+  .route("/:id")
+  .get(requireUser, async (req, res) => {
+    const { id } = req.params;
+    const user = await getUserById(id);
 
-  if (!user) {
-    return res.status(404).send("User couldn't be found");
-  }
-  res.send(user);
-})
+    if (!user) {
+      return res.status(404).send("User couldn't be found");
+    }
+    res.send(user);
+  })
   .put(requireUser, async (req, res) => {
     const { id } = req.params;
     const { username, name, gender, birthday } = req.body;
@@ -60,7 +62,7 @@ router.route("/:id").get(requireUser, async (req, res) => {
       birthday
     );
     res.send(updatedUser);
-});
+  });
 
 router.route("/trainers/:id").get(requireUser, async (req, res) => {
   const { id } = req.params;
@@ -76,20 +78,18 @@ router.route("/trainers/:id").get(requireUser, async (req, res) => {
   res.send(trainers);
 });
 
-router
-  .route("/trainees/:id")
-  .get(requireUser, async (req, res) => {
-    const { id } = req.params;
-    let { goal, preferred_trainer } = req.query;
-    if (goal === "") {
-      goal = null;
-    }
-    if (preferred_trainer === "") {
-      preferred_trainer = null;
-    }
-    const trainees = await trainerFindTrainees(id, goal, preferred_trainer);
-    if (!trainees) return res.status(404).send("no trainees found");
-    res.send(trainees);
+router.route("/trainees/:id").get(requireUser, async (req, res) => {
+  const { id } = req.params;
+  let { goal, preferred_trainer } = req.query;
+  if (goal === "") {
+    goal = null;
+  }
+  if (preferred_trainer === "") {
+    preferred_trainer = null;
+  }
+  const trainees = await trainerFindTrainees(id, goal, preferred_trainer);
+  if (!trainees) return res.status(404).send("no trainees found");
+  res.send(trainees);
 });
 
 router.route("/:id/fitness-goal").put(requireUser, async (req, res) => {
