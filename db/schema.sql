@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS goals CASCADE;
 DROP TABLE IF EXISTS workouts;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS user_achievements;
+DROP TABLE IF EXISTS user_workouts;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -116,4 +117,16 @@ CREATE TABLE settings (
   notifications BOOLEAN DEFAULT true,
   public_profile BOOLEAN DEFAULT true,
   location_sharing BOOLEAN DEFAULT true
+);
+
+CREATE TABLE user_workouts (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  workout_description TEXT NOT NULL,
+  muscle TEXT NOT NULL,
+  workout_date DATE NOT NULL,
+  minutes_worked_out INTEGER NOT NULL,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
