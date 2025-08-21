@@ -1,5 +1,7 @@
 // api/workouts.js
 import express from "express";
+import requireBody from "#middleware/requireBody";
+import requireUser from "#middleware/requireUser";
 import {
   getAllWorkouts,
   getWorkoutById,
@@ -11,12 +13,10 @@ import {
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/", async (_req, res, next) => {
   try {
     const workouts = await getAllWorkouts();
-    if (!workouts.length) return res.status(404).send("no workouts found");
-
-    res.send(workouts);
+    res.json(workouts ?? []);
   } catch (err) {
     next(err);
   }
@@ -25,29 +25,50 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const w = await getWorkoutById(req.params.id);
-    if (!w) return res.status(404).send("workout not found");
-    res.send(w);
+    if (!w) return res.status(404).json({ error: "workout not found" });
+    res.json(w);
   } catch (err) {
     next(err);
   }
 });
 
-router.route("/user/:user_id").get(async (req, res) => {
+function assertSelf(req, res) {
   const { user_id } = req.params;
-  const userWorkouts = await getUserWorkouts(user_id);
-  res.send(userWorkouts);
+  if (!req.user) {
+    res.status(401).json({ error: "Unauthorized" });
+    return false;
+  }
+  if (String(req.user.id) !== String(user_id)) {
+    res.status(403).json({ error: "Forbidden: cannot access another user" });
+    return false;
+  }
+  return true;
+}
+
+router.get("/user/:user_id", requireUser, async (req, res, next) => {
+  try {
+    if (!assertSelf(req, res)) return;
+    const { user_id } = req.params;
+    const userWorkouts = await getUserWorkouts(user_id);
+    res.json(userWorkouts ?? []);
+  } catch (err) {
+    next(err);
+  }
 });
 
-router
-  .route("/user/:user_id")
-  .post(
-    requireBody([
-      "workout_description",
-      "muscle",
-      "workout_date",
-      "minutes_worked_out",
-    ]),
-    async (req, res) => {
+router.post(
+  "/user/:user_id",
+  requireUser,
+  requireBody([
+    "workout_description",
+    "muscle",
+    "workout_date",
+    "minutes_worked_out",
+  ]),
+  async (req, res, next) => {
+    try {
+      if (!assertSelf(req, res)) return;
+
       const { user_id } = req.params;
       const {
         workout_description,
@@ -57,10 +78,11 @@ router
         notes,
       } = req.body;
 
-      if (minutes_worked_out <= 0) {
+      const minutes = Number(minutes_worked_out);
+      if (!Number.isFinite(minutes) || minutes <= 0) {
         return res
           .status(400)
-          .send("minutes_worked_out must be greater than 0");
+          .json({ error: "minutes_worked_out must be a positive number" });
       }
 
       const userWorkout = await addWorkout(
@@ -68,24 +90,30 @@ router
         workout_description,
         muscle,
         workout_date,
-        minutes_worked_out,
-        notes
+        minutes,
+        notes ?? ""
       );
 
-      res.status(201).send(userWorkout);
+      res.status(201).json(userWorkout);
+    } catch (err) {
+      next(err);
     }
-  );
+  }
+);
 
-router
-  .route("/user/:user_id/:id")
-  .put(
-    requireBody([
-      "workout_description",
-      "muscle",
-      "workout_date",
-      "minutes_worked_out",
-    ]),
-    async (req, res) => {
+router.put(
+  "/user/:user_id/:id",
+  requireUser,
+  requireBody([
+    "workout_description",
+    "muscle",
+    "workout_date",
+    "minutes_worked_out",
+  ]),
+  async (req, res, next) => {
+    try {
+      if (!assertSelf(req, res)) return;
+
       const { user_id, id } = req.params;
       const {
         workout_description,
@@ -95,10 +123,11 @@ router
         notes,
       } = req.body;
 
-      if (minutes_worked_out <= 0) {
+      const minutes = Number(minutes_worked_out);
+      if (!Number.isFinite(minutes) || minutes <= 0) {
         return res
           .status(400)
-          .send("minutes_worked_out must be greater than 0");
+          .json({ error: "minutes_worked_out must be a positive number" });
       }
 
       const userWorkout = await updateUserWorkout(
@@ -107,27 +136,36 @@ router
         workout_description,
         muscle,
         workout_date,
-        minutes_worked_out,
-        notes
+        minutes,
+        notes ?? ""
       );
 
       if (!userWorkout) {
-        return res.status(404).send("User workout not found");
+        return res.status(404).json({ error: "User workout not found" });
       }
 
-      res.send(userWorkout);
+      res.json(userWorkout);
+    } catch (err) {
+      next(err);
     }
-  );
-
-router.route("/user/:user_id/:id").delete(async (req, res) => {
-  const { user_id, id } = req.params;
-  const deletedWorkout = await deleteUserWorkout(id, user_id);
-
-  if (!deletedWorkout) {
-    return res.status(404).send("User workout not found");
   }
+);
 
-  res.send(deletedWorkout);
+router.delete("/user/:user_id/:id", requireUser, async (req, res, next) => {
+  try {
+    if (!assertSelf(req, res)) return;
+
+    const { user_id, id } = req.params;
+    const deletedWorkout = await deleteUserWorkout(id, user_id);
+
+    if (!deletedWorkout) {
+      return res.status(404).json({ error: "User workout not found" });
+    }
+
+    res.json(deletedWorkout);
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;
